@@ -1,62 +1,92 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace ModuleEditor
 {
-	class Design : IDisposable
+	class Design
 	{
-		private static string design_path(string type) { return "CustomObjectModule/designs/Design_" + type + ".xml"; }
-		private static string schema_path(string type) { return "CustomObjectModule/xsd/" + type + ".xsd"; }
-
-		private Archive archive;
+		private List<XDocument> all_designs;
 		private XDocument design;
-		private XDocument schema;
+		private List<XElement> all_fields;
 
-		/// <summary>Loads a design of the given type from the given archvie</summary>
-		/// <param name="archive">The archive object to load from</param>
-		/// <param name="type">The type name of the design to load</param>
-		public Design(Archive archive, string type)
+		// Creates a new design object using the list of all designs and the selected design
+		public Design(List<XDocument> all_designs, XDocument design)
 		{
-			this.archive = archive;
-			design = archive.LoadXML(design_path(type));
-			if (Primary)
+			this.all_designs = all_designs;
+			this.design = design;
+
+			all_fields = new List<XElement>();
+
+			foreach (var field in design.Element("CustomObjectDesignV110").Elements("scalarField"))
 			{
-				schema = archive.LoadXML(schema_path(type));
+				all_fields.Add(field);
 			}
 		}
 
-		/// <summary>Finalizes the changes to the design</summary>
-		public void Dispose()
+		// Gets the type of a design from the XDocument format
+		public static string GetType(XDocument design)
 		{
-			archive.StoreXML(design_path(Type), design);
-			if (schema != null)
-			{
-				archive.StoreXML(schema_path(Type), schema);
-			}
+			return design.Element("CustomObjectDesignV110").Element("globalObjectType").Value;
 		}
 
-		/// <summary>Removes a design from the archive</summary>
-		/// <param name="archive">The archive to remove the design from</param>
-		/// <param name="type">The design type to remove</param>
-		public static void Remove(Archive archive, string type)
+		// Finds a design from the list of all designs using the given type
+		public static Design Find(List<XDocument> all_designs, string type)
 		{
-			var design = new Design(archive, type);
-			archive.RemoveFile(design_path(type));
-			if (design.Primary)
-			{
-				archive.RemoveFile(schema_path(type));
-			}
+			var design = all_designs.Find(x => GetType(x) == type);
+			return new Design(all_designs, design);
+		}
+
+		// Gets a field by name using the field find
+		public Field Field(string name)
+		{
+			return ModuleEditor.Field.Find(all_fields, name);
+		}
+
+		// Removes a design from the module
+		public void Remove()
+		{
+			all_designs.Remove(design);
+		}
+
+		// Copies a design to a new object
+		public Design Copy()
+		{
+			var copy = XDocument.Parse(design.ToString());
+			all_designs.Add(copy);
+			return new Design(all_designs, copy);
 		}
 
 		public string Type
 		{
 			get
 			{
-				return design.Element("CustomObjectDesignV110").Element("globalObjectType").Value;
+				return GetType(design);
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return design.Element("CustomObjectDesignV110").Element("name").Value;
 			}
 			set
 			{
-				design.Element("CustomObjectDesignV110").Element("globalObjectType").Value = value;
+				design.Element("CustomObjectDesignV110").Element("globalObjectType").Value = "$" + value + Type.Replace("$" + Name, "");
+				design.Element("CustomObjectDesignV110").Element("name").Value = value;
+			}
+		}
+
+		public string Description
+		{
+			get
+			{
+				return design.Element("CustomObjectDesignV110").Element("description").Value;
+			}
+			set
+			{
+				design.Element("CustomObjectDesignV110").Element("description").Value = value;
 			}
 		}
 

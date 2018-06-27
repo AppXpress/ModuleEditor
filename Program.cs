@@ -6,21 +6,27 @@ namespace ModuleEditor
 	{
 		static void Main(string[] args)
 		{
-			using (var archive = new Archive("../modules/CRTaskDashboard-1098490738_v100.zip"))
+			using (var archive = Archive.Import("../modules/CRTaskDashboard-1098490738_v100.zip"))
 			{
-				using (var module = archive.LoadModule())
-				{
-					module.Name = "CRTaskDash";
-					module.Description = "just a test!";
-				}
+				var module = archive.Module();
+				module.Name = "TestModule";
+				module.Description = "This module is for testing the module editor";
 
-				using (var design = archive.LoadDesign("$BlankB1"))
-				{
-					design.Type = "$TestTypeT1";
-					Design.Remove(archive, "$BlankB1");
-				}
+				var design = archive.Design("$BlankB1");
+				design.Name = "TestDesign";
+				design.Description = "Test description";
 
-				archive.Export("../modules/new.zip", true);
+				var field = design.Field("licensee");
+				field.Description = "Hello!";
+
+				var design2 = design.Copy();
+				design2.Name = "CopyDesign";
+				design2.Description = "Copy description";
+
+				var field2 = design2.Field("licensee");
+				field2.Description = "Goodbye!";
+
+				archive.Export("../modules/test.zip", true);
 			}
 		}
 	}

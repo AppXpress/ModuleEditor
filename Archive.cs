@@ -1,115 +1,95 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace ModuleEditor
 {
-	class Archive : IDisposable
+	partial class Archive : IDisposable
 	{
+		// File location constants
+		private const string module_data_file = "PlatformModule.xml";
+		private const string module_meta_file = "metadata.properties";
+		private const string design_folder = "CustomObjectModule/designs";
+
+		// Instance variables for module and designs
+		private XDocument module_data;
+		private Properties module_meta;
+		private List<XDocument> all_designs;
+
+		// Archive instance data
 		private string folder;
+		private bool temporary;
 
-		/// <summary>Creates a new archive object from the ZIP file at the given path</summary>
-		/// <param name="path">The path to the source ZIP file</param>
-		public Archive(string path)
+		// Creates a new archive
+		// folder is the location of the extracted ZIP
+		// temporary is a flag indicating if the folder should be deleted after
+		public Archive(string folder, bool temporary = false)
 		{
-			folder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+			this.folder = folder;
+			this.temporary = temporary;
 
-			if (File.Exists(path))
+			all_designs = new List<XDocument>();
+
+
+			module_data = LoadXML(module_data_file);
+			module_meta = LoadProps(module_meta_file);
+
+			foreach (var file in Files(design_folder))
 			{
-				ZipFile.ExtractToDirectory(path, folder);
+				all_designs.Add(LoadXML(file));
+				Delete(file);
 			}
 		}
 
-		/// <summary>Cleans up temporary files from the archive</summary>
+		// Deletes the folder if it was temporary
 		public void Dispose()
 		{
-			Directory.Delete(folder, true);
+			if (temporary)
+			{
+				Directory.Delete(folder, true);
+			}
 		}
 
-		/// <summary>Exports the archive data into a new ZIP file</summary>
-		/// <param name="path">The path to export the archive ZIP into</summary>
-		/// <param name="force">Set true to overwrite existing files<param>
+		// Gets the module that this archive represents
+		public Module Module()
+		{
+			return new Module(module_data, module_meta);
+		}
+
+		// Gets a design from the archive data
+		public Design Design(string type)
+		{
+			return ModuleEditor.Design.Find(all_designs, type);
+		}
+
+		// Imports a ZIP archive from the given path
+		// Returns an archive object for modifiying
+		public static Archive Import(string path)
+		{
+			var temp = TempPath();
+			ZipFile.ExtractToDirectory(path, temp);
+			return new Archive(temp, true);
+		}
+
+		// Exports the data back into a ZIP archive
+		// path is the location to save the ZIP to
+		// force is flag indicating existing file should be overwritten
 		public void Export(string path, bool force = false)
 		{
-			if (File.Exists(path))
+			StoreXML(module_data_file, module_data);
+			StoreProps(module_meta_file, module_meta);
+
+			foreach (var design in all_designs)
 			{
-				if (!force)
-				{
-					throw new Exception("Export path already exists, export failed");
-				}
-				File.Delete(path);
+				var type = ModuleEditor.Design.GetType(design);
+				var file = design_folder + "/Design_" + type + ".xml";
+				StoreXML(file, design);
 			}
+
+			if (force) { File.Delete(path); }
 			ZipFile.CreateFromDirectory(folder, path);
-		}
-
-
-
-		public Module LoadModule()
-		{
-			return new Module(this);
-		}
-
-		public Design LoadDesign(string type)
-		{
-			return new Design(this, type);
-		}
-
-		public void RemoveDesign(string type)
-		{
-			Design.Remove(this, type);
-		}
-
-
-
-		/// <summary>Loads an XML document from the archive</summary>
-		/// <param name="file">The path to the file to load as XML</param>
-		/// <returns>An XDocument of the file at the given path</returns>
-		public XDocument LoadXML(string file)
-		{
-			return XDocument.Load(Path.Combine(folder, file));
-		}
-
-		/// <summary>Saves an XML document back into the archive</summary>
-		/// <param name="file">The path to store the XML in</param>
-		/// <param name="xml">The XML file to store in the archive</param>
-		public void StoreXML(string file, XDocument xml)
-		{
-			var outpath = Path.Combine(folder, file);
-			var settings = new XmlWriterSettings();
-			settings.OmitXmlDeclaration = true;
-			settings.Encoding = Encoding.ASCII;
-
-			using (var writer = XmlWriter.Create(outpath, settings))
-			{
-				xml.Save(writer);
-			}
-		}
-
-		/// <summary>Loads a properties file from the archive</summary>
-		/// <param name="file">The path to the file to load as properties</param>
-		/// <returns>A properties object of the file at the given path</returns>
-		public Properties LoadProps(string file)
-		{
-			return Properties.Load(Path.Combine(folder, file));
-		}
-
-		/// <summary>Saves a properties file back into the archive</summary>
-		/// <param name="file">The path to store the properties in</param>
-		/// <param name="props">The properties file object to store in the archive</param>
-		public void StoreProps(string file, Properties props)
-		{
-			props.Save(Path.Combine(folder, file));
-		}
-
-
-		/// <summary>Removes a file from the archive</summary>
-		/// <param name="path">Path to the file to be removed</param>
-		public void RemoveFile(string file)
-		{
-			File.Delete(Path.Combine(folder, file));
 		}
 	}
 }

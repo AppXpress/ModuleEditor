@@ -1,45 +1,36 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace ModuleEditor
 {
-	class Module : IDisposable
+	class Module
 	{
-		private static string config_file = "PlatformModule.xml";
-		private static string metadata_file = "metadata.properties";
+		private XDocument data;
+		private Properties meta;
 
-		private Archive archive;
-		private XDocument config;
-		private Properties metadata;
-
-		/// <summary>Loads a platform module from the given archive</summary>
-		/// <param name="archive">The archvie object to load from</param>
-		public Module(Archive archive)
+		// Creates a new module using the module data
+		public Module(XDocument data, Properties meta)
 		{
-			this.archive = archive;
-			config = archive.LoadXML(config_file);
-			metadata = archive.LoadProps(metadata_file);
-		}
-
-		/// <summary>Finalizes changes to the module and stores in the archive</summary>
-		public void Dispose()
-		{
-			archive.StoreXML(config_file, config);
-			archive.StoreProps(metadata_file, metadata);
+			this.data = data;
+			this.meta = meta;
 		}
 
 		public string Name
 		{
 			get
 			{
-				return config.Element("PlatformModule400").Element("name").Value;
+				return data.Element("PlatformModule400").Element("name").Value;
 			}
 			set
 			{
-				config.Element("PlatformModule400").Element("name").Value = value;
-				metadata.Set("name", value);
+				data.Element("PlatformModule400").Element("name").Value = value;
+				meta.Set("name", value);
 			}
 		}
 
@@ -47,11 +38,11 @@ namespace ModuleEditor
 		{
 			get
 			{
-				return config.Element("PlatformModule400").Element("description").Value;
+				return data.Element("PlatformModule400").Element("description").Value;
 			}
 			set
 			{
-				config.Element("PlatformModule400").Element("description").Value = value;
+				data.Element("PlatformModule400").Element("description").Value = value;
 			}
 		}
 	}
