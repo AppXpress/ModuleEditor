@@ -2,45 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace ModuleEditor
+namespace AppX
 {
 	class Design
 	{
 		private List<XDocument> all_designs;
 		private XDocument design;
-		private List<XElement> all_fields;
+		private XElement fields_parent;
 
-		// Creates a new design object using the list of all designs and the selected design
-		public Design(List<XDocument> all_designs, XDocument design)
+		// Creates a design object from the list of all designs and a design type
+		public Design(List<XDocument> all_designs, string type)
 		{
 			this.all_designs = all_designs;
-			this.design = design;
+			design = all_designs.Find(x => GetType(x) == type);
 
-			all_fields = new List<XElement>();
-
-			foreach (var field in design.Element("CustomObjectDesignV110").Elements("scalarField"))
-			{
-				all_fields.Add(field);
-			}
-		}
-
-		// Gets the type of a design from the XDocument format
-		public static string GetType(XDocument design)
-		{
-			return design.Element("CustomObjectDesignV110").Element("globalObjectType").Value;
-		}
-
-		// Finds a design from the list of all designs using the given type
-		public static Design Find(List<XDocument> all_designs, string type)
-		{
-			var design = all_designs.Find(x => GetType(x) == type);
-			return new Design(all_designs, design);
+			fields_parent = design.Element("CustomObjectDesignV110");
 		}
 
 		// Gets a field by name using the field find
 		public Field Field(string name)
 		{
-			return ModuleEditor.Field.Find(all_fields, name);
+			return new Field(fields_parent, name);
 		}
 
 		// Removes a design from the module
@@ -54,7 +36,13 @@ namespace ModuleEditor
 		{
 			var copy = XDocument.Parse(design.ToString());
 			all_designs.Add(copy);
-			return new Design(all_designs, copy);
+			return new Design(all_designs, GetType(copy));
+		}
+
+		// Gets the type of a design from the XDocument format
+		public static string GetType(XDocument design)
+		{
+			return design.Element("CustomObjectDesignV110").Element("globalObjectType").Value;
 		}
 
 		public string Type

@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ModuleEditor
+namespace AppX
 {
 	partial class Archive
 	{
