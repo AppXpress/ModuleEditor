@@ -6,84 +6,56 @@ namespace AppX
 {
 	class Design
 	{
-		private List<XDocument> all_designs;
-		private XDocument design;
-		private XElement fields_parent;
-
-		// Creates a design object from the list of all designs and a design type
-		public Design(List<XDocument> all_designs, string type)
-		{
-			this.all_designs = all_designs;
-			design = all_designs.Find(x => GetType(x) == type);
-
-			fields_parent = design.Element("CustomObjectDesignV110");
-		}
-
-		// Gets a field by name using the field find
-		public Field Field(string name)
-		{
-			return new Field(fields_parent, name);
-		}
-
-		// Removes a design from the module
-		public void Remove()
-		{
-			all_designs.Remove(design);
-		}
-
-		// Copies a design to a new object
-		public Design Copy()
-		{
-			var copy = XDocument.Parse(design.ToString());
-			all_designs.Add(copy);
-			return new Design(all_designs, GetType(copy));
-		}
-
 		// Gets the type of a design from the XDocument format
 		public static string GetType(XDocument design)
 		{
 			return design.Element("CustomObjectDesignV110").Element("globalObjectType").Value;
 		}
 
+		private List<XDocument> designs;
+		private XElement data;
+
+		public Design(List<XDocument> designs, string type)
+		{
+			this.designs = designs;
+			data = designs.Find(x => GetType(x) == type).Element("CustomObjectDesignV110");
+		}
+
+		public Field Field(string name)
+		{
+			return new Field(data, name);
+		}
+
+		public void Remove()
+		{
+			designs.Remove(data.Document);
+		}
+
 		public string Type
 		{
-			get
-			{
-				return GetType(design);
-			}
+			get { return data.Element("globalObjectType").Value; }
+			private set { data.Element("globalObjectType").Value = value; }
 		}
 
 		public string Name
 		{
-			get
-			{
-				return design.Element("CustomObjectDesignV110").Element("name").Value;
-			}
+			get { return data.Element("name").Value; }
 			set
 			{
-				design.Element("CustomObjectDesignV110").Element("globalObjectType").Value = "$" + value + Type.Replace("$" + Name, "");
-				design.Element("CustomObjectDesignV110").Element("name").Value = value;
+				Type = Type.Replace(Name, value);
+				data.Element("name").Value = value;
 			}
 		}
 
 		public string Description
 		{
-			get
-			{
-				return design.Element("CustomObjectDesignV110").Element("description").Value;
-			}
-			set
-			{
-				design.Element("CustomObjectDesignV110").Element("description").Value = value;
-			}
+			get { return data.Element("description").Value; }
+			set { data.Element("description").Value = value; }
 		}
 
 		public bool Primary
 		{
-			get
-			{
-				return design.Element("CustomObjectDesignV110").Element("designType").Value == "PRIMARY";
-			}
+			get { return data.Element("designType").Value == "PRIMARY"; }
 		}
 	}
 }

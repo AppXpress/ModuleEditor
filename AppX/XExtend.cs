@@ -4,6 +4,7 @@ namespace AppX
 {
 	static class XExtend
 	{
+		// Gets an element by name or returns a new element
 		public static XElement Grab(this XElement parent, XName name)
 		{
 			var element = parent.Element(name);

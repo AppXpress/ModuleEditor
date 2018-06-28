@@ -19,8 +19,8 @@ namespace ModuleEditor
 				design.Name = "TestDesign";
 				design.Description = "Test description";
 
-				var field = design.Field("licensee");
-				field.Description = "Hello!";
+				// var field = design.Field("licensee");
+				// field.Description = "Hello!";
 
 				// var design2 = design.Copy();
 				// design2.Name = "CopyDesign";

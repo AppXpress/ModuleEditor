@@ -1,10 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace AppX
@@ -23,10 +17,7 @@ namespace AppX
 
 		public string Name
 		{
-			get
-			{
-				return data.Element("PlatformModule400").Element("name").Value;
-			}
+			get { return data.Element("PlatformModule400").Element("name").Value; }
 			set
 			{
 				data.Element("PlatformModule400").Element("name").Value = value;
@@ -36,14 +27,8 @@ namespace AppX
 
 		public string Description
 		{
-			get
-			{
-				return data.Element("PlatformModule400").Element("description").Value;
-			}
-			set
-			{
-				data.Element("PlatformModule400").Element("description").Value = value;
-			}
+			get { return data.Element("PlatformModule400").Element("description").Value; }
+			set { data.Element("PlatformModule400").Element("description").Value = value; }
 		}
 	}
 }

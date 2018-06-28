@@ -8,60 +8,60 @@ namespace AppX
 	class Field
 	{
 		private XElement parent;
-		private XElement field;
+		private XElement data;
 
 		public Field(XElement parent, string name)
 		{
 			this.parent = parent;
-			field = parent.Elements("scalarField").FirstOrDefault(x => x.Grab("fieldName").Value == name);
+			data = parent.Elements("scalarField").FirstOrDefault(x => x.Grab("fieldName").Value == name);
 
-			if (field == null)
+			if (data == null)
 			{
-				field = new XElement("scalarField");
-				parent.Add(field);
+				data = new XElement("scalarField");
+				parent.Add(data);
 				Name = name;
 			}
 		}
 
 		public void Remove()
 		{
-			field.Remove();
+			data.Remove();
 		}
 
 		public string Name
 		{
-			get { return field.Grab("fieldName").Value; }
-			set { field.Grab("fieldName").Value = value; }
+			get { return data.Grab("fieldName").Value; }
+			set { data.Grab("fieldName").Value = value; }
 		}
 
 		public string Description
 		{
-			get { return field.Grab("description").Value; }
-			set { field.Grab("description").Value = value; }
+			get { return data.Grab("description").Value; }
+			set { data.Grab("description").Value = value; }
 		}
 
 		public int Position
 		{
-			get { return int.Parse(field.Grab("fieldPosition").Value); }
-			set { field.Grab("fieldPosition").Value = value.ToString(); }
+			get { return int.Parse(data.Grab("fieldPosition").Value); }
+			set { data.Grab("fieldPosition").Value = value.ToString(); }
 		}
 
 		public bool Indexed
 		{
-			get { return field.Grab("indexed").Value == "true"; }
-			set { field.Grab("indexed").Value = value.ToString(); }
+			get { return data.Grab("indexed").Value == "true"; }
+			set { data.Grab("indexed").Value = value.ToString(); }
 		}
 
 		public bool Summary
 		{
-			get { return field.Grab("summaryField").Value == "true"; }
-			set { field.Grab("summaryField").Value = value.ToString(); }
+			get { return data.Grab("summaryField").Value == "true"; }
+			set { data.Grab("summaryField").Value = value.ToString(); }
 		}
 
 		public int MaxLength
 		{
-			get { return int.Parse(field.Grab("maxLength").Value); }
-			set { field.Grab("maxLength").Value = value.ToString(); }
+			get { return int.Parse(data.Grab("maxLength").Value); }
+			set { data.Grab("maxLength").Value = value.ToString(); }
 		}
 	}
 }
