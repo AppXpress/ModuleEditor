@@ -15,5 +15,10 @@ namespace AppX
 			}
 			return element;
 		}
+
+		public static XElement Grab(this XDocument parent, XName name)
+		{
+			return parent.Root.Grab(name);
+		}
 	}
 }

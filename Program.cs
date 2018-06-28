@@ -9,15 +9,21 @@ namespace ModuleEditor
 		{
 			Console.WriteLine("Start");
 
-			using (var archive = Archive.Import("../modules/CRTaskDashboard-1098490738_v100.zip"))
+			// using (var archive = Archive.Import("../modules/CRTaskDashboard-1098490738_v100.zip"))
+			using (var archive = Archive.Import("../modules/IssueTracker-83901514_v100.zip"))
 			{
 				var module = archive.Module();
 				module.Name = "TestModule";
 				module.Description = "This module is for testing the module editor";
 
-				var design = archive.Design("$BlankB1");
-				design.Name = "TestDesign";
-				design.Description = "Test description";
+				var design = archive.Design("$GenericAnchorT1");
+
+				var field = design.Field("objectType");
+				field.Remove();
+
+				// var design = archive.Design("$BlankB1");
+				// design.Name = "TestDesign";
+				// design.Description = "Test description";
 
 				// var field = design.Field("licensee");
 				// field.Description = "Hello!";

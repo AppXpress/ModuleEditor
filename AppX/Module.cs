@@ -17,18 +17,18 @@ namespace AppX
 
 		public string Name
 		{
-			get { return data.Element("PlatformModule400").Element("name").Value; }
+			get { return data.Grab("PlatformModule400").Grab("name").Value; }
 			set
 			{
-				data.Element("PlatformModule400").Element("name").Value = value;
+				data.Grab("PlatformModule400").Grab("name").Value = value;
 				meta.Set("name", value);
 			}
 		}
 
 		public string Description
 		{
-			get { return data.Element("PlatformModule400").Element("description").Value; }
-			set { data.Element("PlatformModule400").Element("description").Value = value; }
+			get { return data.Grab("PlatformModule400").Grab("description").Value; }
+			set { data.Grab("PlatformModule400").Grab("description").Value = value; }
 		}
 	}
 }
