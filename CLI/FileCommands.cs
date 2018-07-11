@@ -3,6 +3,7 @@ using System;
 
 namespace CLI
 {
+	// Imports a ZIP archive into the broker state
 	class ImportCommand : Command
 	{
 		private CommandBroker broker;
@@ -28,6 +29,7 @@ namespace CLI
 		}
 	}
 
+	// Exports the archive in the broker state into a ZIP file
 	class ExportCommand : Command
 	{
 		private CommandBroker broker;

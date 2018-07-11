@@ -2,8 +2,13 @@ using System.Collections.Generic;
 
 namespace CLI
 {
+	// Represents an array of arguments
 	static class ArgArray
 	{
+		// Parse a string into an argument array
+		// Inteprets spaces as argument separators
+		// Will include spaces in quoted strings
+		// Allows backslash escaping for quotes and other backslashes
 		public static string[] Parse(string input)
 		{
 			var items = new List<string>();

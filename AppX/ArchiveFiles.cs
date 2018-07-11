@@ -6,6 +6,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Adds file editing methods to the archive class
 	partial class Archive
 	{
 		// Loads an XML document from the archive

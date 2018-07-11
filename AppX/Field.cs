@@ -5,6 +5,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Represents a field in an AppX design
 	class Field
 	{
 		private XElement parent;

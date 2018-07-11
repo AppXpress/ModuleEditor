@@ -6,6 +6,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Represents a ZIP archive of a AppX platform module
 	partial class Archive : IDisposable
 	{
 		// File location constants

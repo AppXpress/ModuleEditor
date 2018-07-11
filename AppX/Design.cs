@@ -4,6 +4,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Represents a design in an AppX platform module
 	class Design
 	{
 		// Gets the type of a design from the XDocument format

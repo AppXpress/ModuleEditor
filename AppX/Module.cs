@@ -3,6 +3,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Represents the module itself in the AppX archive
 	class Module
 	{
 		private XDocument data;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace CLI
 {
+	// Selects a module/design/field for removal or editing
 	class SelectCommand : Command
 	{
 		private CommandBroker broker;

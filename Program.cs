@@ -8,6 +8,7 @@ namespace ModuleEditor
 	{
 		static void Main(string[] args)
 		{
+			// Creates a broker with the standard commands
 			var broker = new CommandBroker();
 			broker.AddCommand(new HelpCommand(broker));
 
@@ -24,6 +25,7 @@ namespace ModuleEditor
 			broker.AddCommand(new DescCommand(broker));
 			broker.AddCommand(new TypeCommand(broker));
 
+			// Evaluates each line of input until the user quits
 			while (true)
 			{
 				Console.Write("> ");

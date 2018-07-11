@@ -3,6 +3,7 @@ using System;
 
 namespace CLI
 {
+	// Removes the selected item from the archive
 	class RemoveCommand : Command
 	{
 		private CommandBroker broker;
@@ -41,6 +42,7 @@ namespace CLI
 		}
 	}
 
+	// Gets or sets the name of the selected module/design/field in the archive
 	class NameCommand : Command
 	{
 		private CommandBroker broker;
@@ -78,6 +80,7 @@ namespace CLI
 		}
 	}
 
+	// Gets or sets the description of the selected module/design/field in the archive
 	class DescCommand : Command
 	{
 		private CommandBroker broker;
@@ -110,6 +113,7 @@ namespace CLI
 		}
 	}
 
+	// Gets the type of the selected design in the archive
 	class TypeCommand : Command
 	{
 		private CommandBroker broker;

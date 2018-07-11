@@ -2,6 +2,7 @@ using System;
 
 namespace CLI
 {
+	// Represents a non-existant command
 	class NullCommand : Command
 	{
 		public string Name() => null;
@@ -14,6 +15,7 @@ namespace CLI
 		}
 	}
 
+	// Command for quitting the program
 	class ExitCommand : Command
 	{
 		public string Name() => "exit";
@@ -26,6 +28,7 @@ namespace CLI
 		}
 	}
 
+	// Debug command for printing out given arguments to test ArgArray class
 	class EchoCommand : Command
 	{
 		public string Name() => "echo";
@@ -41,6 +44,7 @@ namespace CLI
 		}
 	}
 
+	// Clears the console screen of text
 	class ClearCommand : Command
 	{
 		public string Name() => "clear";

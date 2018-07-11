@@ -4,6 +4,7 @@ using System.IO;
 
 namespace AppX
 {
+	// Represents a .properties file
 	class Properties
 	{
 		private List<string> lines;

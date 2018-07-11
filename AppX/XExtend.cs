@@ -3,6 +3,7 @@ using System.Xml.Linq;
 
 namespace AppX
 {
+	// Adds helper methods to XML classes
 	static class XExtend
 	{
 		private static XContainer GrabContainer(this XContainer parent, XName name)

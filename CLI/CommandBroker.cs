@@ -5,37 +5,39 @@ using System.Linq;
 
 namespace CLI
 {
+	// Controller for running commands and storing state between commands
 	class CommandBroker
 	{
-		public Archive Archive { get; set; }
-		public Module Module { get; set; }
-		public Design Design { get; set; }
-		public Field Field { get; set; }
-
 		public CommandBroker()
 		{
 			commands = new List<Command>();
 			state = new Dictionary<string, dynamic>();
 		}
 
+		// Stores all possible commands for this broker
 		private List<Command> commands { get; }
+		// Stores the state of the command runtime
 		private Dictionary<string, dynamic> state { get; }
 
+		// Registers a new command with the broker
 		public void AddCommand(Command command)
 		{
 			commands.Add(command);
 		}
 
+		// Gets an array of all active commands
 		public Command[] GetCommands()
 		{
 			return commands.ToArray();
 		}
 
+		// Gets an item from the state by key
 		public dynamic GetState(string key)
 		{
 			return state.GetValueOrDefault(key);
 		}
 
+		// Sets an item in the state using the key and value
 		public void SetState(string key, dynamic value)
 		{
 			if (state.ContainsKey(key))
@@ -45,6 +47,7 @@ namespace CLI
 			state.Add(key, value);
 		}
 
+		// Runs a command by parsing the arguments, finding the command object, and calling it
 		public void Run(string input)
 		{
 			var args = ArgArray.Parse(input);
