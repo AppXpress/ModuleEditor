@@ -6,8 +6,9 @@ namespace CLI
 {
 	interface Command
 	{
-		string Text();
-		string Help();
+		string Name();
+		string Args();
+		string Info();
 		void Run(string[] args);
 	}
 
@@ -19,20 +20,23 @@ namespace CLI
 			this.broker = broker;
 		}
 
-		public string Text() => "help";
-		public string Help() => "help\ndisplays this message";
+		public string Name() => "help";
+		public string Args() => "";
+		public string Info() => "displays this message";
 
 		public void Run(string[] args)
 		{
-			Console.WriteLine(" GTN Module Editor Help");
-			Console.WriteLine(" Key: <> = required arg; [] = optional arg");
+			Console.WriteLine();
+			Console.WriteLine("GTN Module Editor Help");
+			Console.WriteLine("Key: <> = required arg; [] = optional arg");
+			Console.WriteLine();
 
 			foreach (var command in broker.Commands)
 			{
-				Console.WriteLine(" ├─ " + command.Help().Replace("\n", "\n │  ") + "\n │  ");
+				Console.WriteLine(command.Name() + " " + command.Args());
+				Console.WriteLine(command.Info());
+				Console.WriteLine();
 			}
 		}
 	}
-
-
 }

@@ -9,6 +9,9 @@ namespace CLI
 	{
 		public List<Command> Commands { get; }
 		public Archive Archive { get; set; }
+		public Module Module { get; set; }
+		public Design Design { get; set; }
+		public Field Field { get; set; }
 
 		public CommandBroker()
 		{
@@ -21,7 +24,7 @@ namespace CLI
 
 			try
 			{
-				var command = Commands.Find(x => x.Text() == args[0]);
+				var command = Commands.Find(x => x.Name() == args[0]);
 				if (command == null) { command = new NullCommand(); }
 				command.Run(args);
 			}

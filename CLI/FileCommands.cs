@@ -11,14 +11,16 @@ namespace CLI
 			this.broker = broker;
 		}
 
-		public string Text() => "import";
-		public string Help() => "import <path>\nimports module ZIP file where path is the ZIP to load from";
+		public string Name() => "import";
+		public string Args() => "<path>";
+		public string Info() => "imports module ZIP file where path is the ZIP to load from";
 
 		public void Run(string[] args)
 		{
 			if (args.Length == 2)
 			{
 				broker.Archive = Archive.Import(args[1]);
+				broker.Module = broker.Archive.Module();
 			}
 			else
 			{
@@ -35,8 +37,9 @@ namespace CLI
 			this.broker = broker;
 		}
 
-		public string Text() => "export";
-		public string Help() => "export <path>\nexports module ZIP file where path is the ZIP to store to";
+		public string Name() => "export";
+		public string Args() => "<path>";
+		public string Info() => "exports module ZIP file where path is the ZIP to store to";
 
 		public void Run(string[] args)
 		{

@@ -4,8 +4,9 @@ namespace CLI
 {
 	class NullCommand : Command
 	{
-		public string Text() => null;
-		public string Help() => null;
+		public string Name() => null;
+		public string Args() => null;
+		public string Info() => "";
 
 		public void Run(string[] args)
 		{
@@ -15,8 +16,9 @@ namespace CLI
 
 	class ExitCommand : Command
 	{
-		public string Text() => "exit";
-		public string Help() => "exit\ncloses the program";
+		public string Name() => "exit";
+		public string Args() => "";
+		public string Info() => "closes the program";
 
 		public void Run(string[] args)
 		{
@@ -26,8 +28,9 @@ namespace CLI
 
 	class EchoCommand : Command
 	{
-		public string Text() => "echo";
-		public string Help() => "echo [string [...]]\nlists the given arguments out";
+		public string Name() => "echo";
+		public string Args() => "[string [...]]";
+		public string Info() => "lists the given arguments out";
 
 		public void Run(string[] args)
 		{
@@ -40,8 +43,9 @@ namespace CLI
 
 	class ClearCommand : Command
 	{
-		public string Text() => "clear";
-		public string Help() => "clear\nclears the console screen";
+		public string Name() => "clear";
+		public string Args() => "";
+		public string Info() => "clears the console screen";
 
 		public void Run(string[] args)
 		{
