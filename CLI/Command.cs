@@ -31,7 +31,7 @@ namespace CLI
 			Console.WriteLine("Key: <> = required arg; [] = optional arg");
 			Console.WriteLine();
 
-			foreach (var command in broker.Commands)
+			foreach (var command in broker.GetCommands())
 			{
 				Console.WriteLine(command.Name() + " " + command.Args());
 				Console.WriteLine(command.Info());

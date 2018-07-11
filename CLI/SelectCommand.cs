@@ -1,4 +1,6 @@
+using AppX;
 using System;
+using System.Collections.Generic;
 
 namespace CLI
 {
@@ -11,46 +13,75 @@ namespace CLI
 		}
 
 		public string Name() => "select";
-		public string Args() => "<'design'|'field'> <type>";
-		public string Info() => "selects a design or field for editing - 'type' is the type of the design/field";
+		public string Args() => "[ <'module'> | <'design' <type>> | <'field' <design-type> <field-name>> ]";
+		public string Info() => "selects an item for edit/removal - omit all args to view current selection";
 
 		public void Run(string[] args)
 		{
-			if (broker.Archive == null)
+			if (args.Length > 1)
 			{
-				throw new Exception("You must import a module first.");
+				Archive archive = broker.GetState("archive");
+				if (archive == null)
+				{
+					throw new Exception("You must import a ZIP first.");
+				}
+
+				switch (args[1])
+				{
+					case "module":
+						broker.SetState("selection", archive.Module());
+						break;
+
+					case "design":
+						if (args.Length < 3)
+						{
+							throw new Exception("Incorrect number of arguments.");
+						}
+
+						broker.SetState("selection", archive.Design(args[2]));
+						break;
+
+					case "field":
+						if (args.Length < 4)
+						{
+							throw new Exception("Incorrect number of arguments.");
+						}
+
+						broker.SetState("selection", archive.Design(args[2]).Field(args[3]));
+						break;
+
+					default:
+						throw new Exception("Selection target type not recognized.");
+				}
 			}
 
-			if (args.Length != 3)
+			var selection = broker.GetState("selection");
+			if (selection == null)
 			{
-				throw new Exception("Incorrect number of arguments.");
+				Console.WriteLine("Nothing is selected.");
 			}
-
-			switch (args[1])
+			else
 			{
-				case "design":
-					broker.Design = broker.Archive.Design(args[2]);
-					if (broker.Design == null)
-					{
-						throw new Exception("Design not found.");
-					}
-					break;
+				string message;
+				var type = selection.GetType();
+				if (type == typeof(Module))
+				{
+					message = "Module '" + selection.Name + "'";
+				}
+				else if (type == typeof(Design))
+				{
+					message = "Design '" + selection.Type + "'";
+				}
+				else if (type == typeof(Field))
+				{
+					message = "Field '" + selection.Name + "'";
+				}
+				else
+				{
+					throw new Exception("Unrecognized selection type.");
+				}
 
-				case "field":
-					if (broker.Design == null)
-					{
-						throw new Exception("You must select a design first.");
-					}
-
-					broker.Field = broker.Design.Field(args[2]);
-					if (broker.Field == null)
-					{
-						throw new Exception("Field not found.");
-					}
-					break;
-
-				default:
-					throw new Exception("Selection target type not recognized.");
+				Console.WriteLine(message + " is selected.");
 			}
 		}
 	}

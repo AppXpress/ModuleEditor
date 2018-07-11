@@ -19,8 +19,7 @@ namespace CLI
 		{
 			if (args.Length == 2)
 			{
-				broker.Archive = Archive.Import(args[1]);
-				broker.Module = broker.Archive.Module();
+				broker.SetState("archive", Archive.Import(args[1]));
 			}
 			else
 			{
@@ -43,19 +42,17 @@ namespace CLI
 
 		public void Run(string[] args)
 		{
-			if (broker.Archive == null)
+			if (broker.GetState("archive") == null)
 			{
 				throw new Exception("A module must be imported first.");
 			}
 
-			if (args.Length == 2)
-			{
-				broker.Archive.Export(args[1]);
-			}
-			else
+			if (args.Length != 2)
 			{
 				throw new Exception("Incorrect number of arguments");
 			}
+
+			broker.GetState("archive").Export(args[1]);
 		}
 	}
 }

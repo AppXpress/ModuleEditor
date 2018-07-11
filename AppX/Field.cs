@@ -10,16 +10,23 @@ namespace AppX
 		private XElement parent;
 		private XElement data;
 
-		public Field(XElement parent, string name)
+		public Field(XElement parent, string name, bool create = false)
 		{
 			this.parent = parent;
 			data = parent.Elements("scalarField").FirstOrDefault(x => x.Grab("fieldName").Value == name);
 
 			if (data == null)
 			{
-				data = new XElement("scalarField");
-				parent.Add(data);
-				Name = name;
+				if (create)
+				{
+					data = new XElement("scalarField");
+					parent.Add(data);
+					Name = name;
+				}
+				else
+				{
+					throw new Exception("Field not found.");
+				}
 			}
 		}
 

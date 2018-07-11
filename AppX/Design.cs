@@ -18,7 +18,13 @@ namespace AppX
 		public Design(List<XDocument> designs, string type)
 		{
 			this.designs = designs;
-			data = designs.Find(x => GetType(x) == type).Element("CustomObjectDesignV110");
+
+			var find = designs.Find(x => Design.GetType(x) == type);
+			if (find == null)
+			{
+				throw new Exception("Design not found.");
+			}
+			data = find.Element("CustomObjectDesignV110");
 		}
 
 		public Field Field(string name)

@@ -7,7 +7,6 @@ namespace CLI
 {
 	class CommandBroker
 	{
-		public List<Command> Commands { get; }
 		public Archive Archive { get; set; }
 		public Module Module { get; set; }
 		public Design Design { get; set; }
@@ -15,7 +14,35 @@ namespace CLI
 
 		public CommandBroker()
 		{
-			Commands = new List<Command>();
+			commands = new List<Command>();
+			state = new Dictionary<string, dynamic>();
+		}
+
+		private List<Command> commands { get; }
+		private Dictionary<string, dynamic> state { get; }
+
+		public void AddCommand(Command command)
+		{
+			commands.Add(command);
+		}
+
+		public Command[] GetCommands()
+		{
+			return commands.ToArray();
+		}
+
+		public dynamic GetState(string key)
+		{
+			return state.GetValueOrDefault(key);
+		}
+
+		public void SetState(string key, dynamic value)
+		{
+			if (state.ContainsKey(key))
+			{
+				state.Remove(key);
+			}
+			state.Add(key, value);
 		}
 
 		public void Run(string input)
@@ -24,7 +51,7 @@ namespace CLI
 
 			try
 			{
-				var command = Commands.Find(x => x.Name() == args[0]);
+				var command = commands.Find(x => x.Name() == args[0]);
 				if (command == null) { command = new NullCommand(); }
 				command.Run(args);
 			}

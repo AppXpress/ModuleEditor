@@ -9,19 +9,20 @@ namespace ModuleEditor
 		static void Main(string[] args)
 		{
 			var broker = new CommandBroker();
-			broker.Commands.Add(new HelpCommand(broker));
+			broker.AddCommand(new HelpCommand(broker));
 
-			broker.Commands.Add(new ExitCommand());
-			broker.Commands.Add(new EchoCommand());
-			broker.Commands.Add(new ClearCommand());
+			broker.AddCommand(new ExitCommand());
+			broker.AddCommand(new EchoCommand());
+			broker.AddCommand(new ClearCommand());
 
-			broker.Commands.Add(new ImportCommand(broker));
-			broker.Commands.Add(new ExportCommand(broker));
+			broker.AddCommand(new ImportCommand(broker));
+			broker.AddCommand(new ExportCommand(broker));
 
-			broker.Commands.Add(new SelectCommand(broker));
-			broker.Commands.Add(new ModuleCommand(broker));
-			broker.Commands.Add(new DesignCommand(broker));
-			broker.Commands.Add(new FieldCommand(broker));
+			broker.AddCommand(new SelectCommand(broker));
+			broker.AddCommand(new RemoveCommand(broker));
+			broker.AddCommand(new NameCommand(broker));
+			broker.AddCommand(new DescCommand(broker));
+			broker.AddCommand(new TypeCommand(broker));
 
 			while (true)
 			{
