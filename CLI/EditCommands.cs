@@ -4,19 +4,15 @@ using System;
 namespace CLI
 {
 	// Removes the selected item from the archive
-	class RemoveCommand : Command
+	class RemoveCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public RemoveCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public RemoveCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "remove";
-		public string Args() => "";
-		public string Info() => "removes the current selection";
+		public override string Name() => "remove";
+		public override string Args() => "";
+		public override string Info() => "removes the current selection";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			var selection = broker.GetState("selection");
 			if (selection != null)
@@ -42,108 +38,111 @@ namespace CLI
 		}
 	}
 
-	// Gets or sets the name of the selected module/design/field in the archive
-	class NameCommand : Command
+	class ListCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public NameCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public ListCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "name";
-		public string Args() => "[set-value]";
-		public string Info() => "get/set the name of the selection";
+		public override string Name() => "list";
+		public override string Args() => "";
+		public override string Info() => "lists all values in the selected item";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			var selection = broker.GetState("selection");
-			if (selection != null)
+			if (selection == null)
 			{
-				var type = selection.GetType();
-				if (type == typeof(Module) || type == typeof(Design) || type == typeof(Field))
-				{
-					if (args.Length > 1)
-					{
-						selection.Name = args[1];
-					}
-					Console.WriteLine(selection.Name);
-
-					if (type == typeof(Design))
-					{
-						Console.WriteLine("* Automated type change -- design type is now '" + selection.Type + "'");
-					}
-					return;
-				}
+				throw new Exception("Nothing is selected.");
 			}
-			throw new Exception("You must select a module, design, or field first.");
+
+			var type = selection.GetType();
+			var properties = type.GetProperties();
+			foreach (var property in properties)
+			{
+				Console.WriteLine(property.Name);
+			}
 		}
 	}
 
-	// Gets or sets the description of the selected module/design/field in the archive
-	class DescCommand : Command
+	class GetCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public DescCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public GetCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "desc";
-		public string Args() => "[set-value]";
-		public string Info() => "get/set the description of the selection";
+		public override string Name() => "get";
+		public override string Args() => "<key>";
+		public override string Info() => "gets a value from the selected item";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			var selection = broker.GetState("selection");
-			if (selection != null)
+			if (selection == null)
 			{
-				var type = selection.GetType();
-				if (type == typeof(Module) || type == typeof(Design) || type == typeof(Field))
-				{
-					if (args.Length > 1)
-					{
-						selection.Description = args[1];
-					}
-					Console.WriteLine(selection.Description);
-					return;
-				}
+				throw new Exception("Nothing is selected.");
 			}
-			throw new Exception("You must select a module, design, or field first.");
+
+			if (args.Length < 2)
+			{
+				throw new Exception("Not enough arguments.");
+			}
+
+			var type = selection.GetType();
+			var property = type.GetProperty(args[1]);
+
+			if (property == null)
+			{
+				throw new Exception("Property not found.");
+			}
+
+			if (!property.CanRead)
+			{
+				throw new Exception("Cannot get this property.");
+			}
+
+			var value = property.GetValue(selection);
+
+			if (value == null)
+			{
+				throw new Exception("Property not found in object.");
+			}
+
+			Console.WriteLine(value.ToString());
 		}
 	}
 
-	// Gets the type of the selected design in the archive
-	class TypeCommand : Command
+	class SetCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public TypeCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public SetCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "type";
-		public string Args() => "";
-		public string Info() => "get the type of the selection";
+		public override string Name() => "set";
+		public override string Args() => "<key> <value>";
+		public override string Info() => "sets a value from the selected item";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			var selection = broker.GetState("selection");
-			if (selection != null)
+			if (selection == null)
 			{
-				var type = selection.GetType();
-				if (type == typeof(Design))
-				{
-					if (args.Length > 1)
-					{
-						Console.WriteLine("* Type cannot be changed directly -- use 'name' command instead");
-					}
-
-					Console.WriteLine(selection.Type);
-					return;
-				}
+				throw new Exception("Nothing is selected.");
 			}
-			throw new Exception("You must select a design first.");
+
+			if (args.Length < 3)
+			{
+				throw new Exception("Not enough arguments.");
+			}
+
+			var type = selection.GetType();
+			var property = type.GetProperty(args[1]);
+
+			if (property == null)
+			{
+				throw new Exception("Property not found.");
+			}
+
+			if (!property.CanWrite)
+			{
+				throw new Exception("Cannot set this property.");
+			}
+
+			property.SetValue(selection, args[2]);
 		}
 	}
 }

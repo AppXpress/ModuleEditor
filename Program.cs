@@ -21,9 +21,10 @@ namespace ModuleEditor
 
 			broker.AddCommand(new SelectCommand(broker));
 			broker.AddCommand(new RemoveCommand(broker));
-			broker.AddCommand(new NameCommand(broker));
-			broker.AddCommand(new DescCommand(broker));
-			broker.AddCommand(new TypeCommand(broker));
+
+			broker.AddCommand(new ListCommand(broker));
+			broker.AddCommand(new GetCommand(broker));
+			broker.AddCommand(new SetCommand(broker));
 
 			// Evaluates each line of input until the user quits
 			while (true)

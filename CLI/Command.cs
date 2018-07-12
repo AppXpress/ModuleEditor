@@ -4,34 +4,40 @@ using System.Collections.Generic;
 
 namespace CLI
 {
-	// Command interface representing a possible command
-	interface Command
+	// Command class representing a possible command
+	abstract class Command
 	{
 		// The command name - what the user enters to run it
-		string Name();
+		public abstract string Name();
 		// A string describing the arguments where <> is required, [] is option
-		string Args();
+		public abstract string Args();
 		// A string describing what the command is for and how it works
-		string Info();
+		public abstract string Info();
 
 		// Function to call when the user enters the command name
-		void Run(string[] args);
+		public abstract void Run(string[] args);
 	}
 
-	// Prints a help message to the user using the commands in the broker
-	class HelpCommand : Command
+	// Command class for commands that interact with broker
+	abstract class BrokerCommand : Command
 	{
-		private CommandBroker broker;
-		public HelpCommand(CommandBroker broker)
+		protected CommandBroker broker;
+		public BrokerCommand(CommandBroker broker)
 		{
 			this.broker = broker;
 		}
+	}
 
-		public string Name() => "help";
-		public string Args() => "";
-		public string Info() => "displays this message";
+	// Prints a help message to the user using the commands in the broker
+	class HelpCommand : BrokerCommand
+	{
+		public HelpCommand(CommandBroker broker) : base(broker) { }
 
-		public void Run(string[] args)
+		public override string Name() => "help";
+		public override string Args() => "";
+		public override string Info() => "displays this message";
+
+		public override void Run(string[] args)
 		{
 			Console.WriteLine();
 			Console.WriteLine("GTN Module Editor Help");

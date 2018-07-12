@@ -41,7 +41,6 @@ namespace AppX
 		public string Type
 		{
 			get { return data.Element("globalObjectType").Value; }
-			private set { data.Element("globalObjectType").Value = value; }
 		}
 
 		public string Name
@@ -49,7 +48,10 @@ namespace AppX
 			get { return data.Element("name").Value; }
 			set
 			{
-				Type = Type.Replace(Name, value);
+				Console.Write("* Automated type change -- '" + Type + "'");
+				data.Element("globalObjectType").Value = Type.Replace(Name, value);
+				Console.Write(" is now '" + Type + "'\n");
+
 				data.Element("name").Value = value;
 			}
 		}

@@ -5,19 +5,15 @@ using System.Collections.Generic;
 namespace CLI
 {
 	// Selects a module/design/field for removal or editing
-	class SelectCommand : Command
+	class SelectCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public SelectCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public SelectCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "select";
-		public string Args() => "[ <'module'> | <'design' <type>> | <'field' <design-type> <field-name>> ]";
-		public string Info() => "selects an item for edit/removal - omit all args to view current selection";
+		public override string Name() => "select";
+		public override string Args() => "[ <'module'> | <'design' <type>> | <'field' <design-type> <field-name>> ]";
+		public override string Info() => "selects an item for edit/removal - omit all args to view current selection";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			if (args.Length > 1)
 			{
@@ -29,10 +25,12 @@ namespace CLI
 
 				switch (args[1])
 				{
+					case "m":
 					case "module":
 						broker.SetState("selection", archive.Module());
 						break;
 
+					case "d":
 					case "design":
 						if (args.Length < 3)
 						{
@@ -42,6 +40,7 @@ namespace CLI
 						broker.SetState("selection", archive.Design(args[2]));
 						break;
 
+					case "f":
 					case "field":
 						if (args.Length < 4)
 						{

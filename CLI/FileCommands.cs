@@ -4,19 +4,15 @@ using System;
 namespace CLI
 {
 	// Imports a ZIP archive into the broker state
-	class ImportCommand : Command
+	class ImportCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public ImportCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public ImportCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "import";
-		public string Args() => "<path>";
-		public string Info() => "imports module ZIP file where path is the ZIP to load from";
+		public override string Name() => "import";
+		public override string Args() => "<path>";
+		public override string Info() => "imports module ZIP file where path is the ZIP to load from";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			if (args.Length == 2)
 			{
@@ -30,19 +26,15 @@ namespace CLI
 	}
 
 	// Exports the archive in the broker state into a ZIP file
-	class ExportCommand : Command
+	class ExportCommand : BrokerCommand
 	{
-		private CommandBroker broker;
-		public ExportCommand(CommandBroker broker)
-		{
-			this.broker = broker;
-		}
+		public ExportCommand(CommandBroker broker) : base(broker) { }
 
-		public string Name() => "export";
-		public string Args() => "<path>";
-		public string Info() => "exports module ZIP file where path is the ZIP to store to";
+		public override string Name() => "export";
+		public override string Args() => "<path>";
+		public override string Info() => "exports module ZIP file where path is the ZIP to store to";
 
-		public void Run(string[] args)
+		public override void Run(string[] args)
 		{
 			if (broker.GetState("archive") == null)
 			{
