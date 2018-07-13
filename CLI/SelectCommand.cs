@@ -17,8 +17,8 @@ namespace CLI
 		{
 			if (args.Length > 1)
 			{
-				Archive archive = broker.GetState("archive");
-				if (archive == null)
+				Module module = broker.GetState("module");
+				if (module == null)
 				{
 					throw new Exception("You must import a ZIP first.");
 				}
@@ -27,7 +27,7 @@ namespace CLI
 				{
 					case "m":
 					case "module":
-						broker.SetState("selection", archive.Module());
+						broker.SetState("selection", module);
 						break;
 
 					case "d":
@@ -37,7 +37,7 @@ namespace CLI
 							throw new Exception("Incorrect number of arguments.");
 						}
 
-						broker.SetState("selection", archive.Design(args[2]));
+						broker.SetState("selection", module.Design(args[2]));
 						break;
 
 					case "f":
@@ -47,7 +47,7 @@ namespace CLI
 							throw new Exception("Incorrect number of arguments.");
 						}
 
-						broker.SetState("selection", archive.Design(args[2]).Field(args[3]));
+						broker.SetState("selection", module.Design(args[2]).Field(args[3]));
 						break;
 
 					default:

@@ -1,19 +1,46 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml.Linq;
 
 namespace AppX
 {
-	// Represents the module itself in the AppX archive
-	class Module
+	// Represents a ZIP archive of a AppX platform module
+	partial class Module : IDisposable
 	{
+		// Archive instance data
+		private string folder;
+		private bool temporary;
+
+		// Instance variables for module and designs
 		private XDocument data;
 		private Properties meta;
+		private List<XDocument> all_designs;
 
-		// Creates a new module using the module data
-		public Module(XDocument data, Properties meta)
+		// Creates a new archive
+		// folder is the location of the extracted ZIP
+		// temporary is a flag indicating if the folder should be deleted after
+		public Module(string folder, bool temporary = false)
 		{
-			this.data = data;
-			this.meta = meta;
+			this.folder = folder;
+			this.temporary = temporary;
+
+			all_designs = new List<XDocument>();
+		}
+
+		// Deletes the folder if it was temporary
+		public void Dispose()
+		{
+			if (temporary)
+			{
+				Directory.Delete(folder, true);
+			}
+		}
+
+		// Gets a design from the archive data
+		public Design Design(string type)
+		{
+			return new Design(all_designs, type);
 		}
 
 		public string Name

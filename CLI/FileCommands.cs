@@ -3,7 +3,7 @@ using System;
 
 namespace CLI
 {
-	// Imports a ZIP archive into the broker state
+	// Imports a ZIP module into the broker state
 	class ImportCommand : BrokerCommand
 	{
 		public ImportCommand(CommandBroker broker) : base(broker) { }
@@ -16,7 +16,7 @@ namespace CLI
 		{
 			if (args.Length == 2)
 			{
-				broker.SetState("archive", Archive.Import(args[1]));
+				broker.SetState("module", Module.Import(args[1]));
 			}
 			else
 			{
@@ -25,7 +25,7 @@ namespace CLI
 		}
 	}
 
-	// Exports the archive in the broker state into a ZIP file
+	// Exports the module in the broker state into a ZIP file
 	class ExportCommand : BrokerCommand
 	{
 		public ExportCommand(CommandBroker broker) : base(broker) { }
@@ -36,7 +36,7 @@ namespace CLI
 
 		public override void Run(string[] args)
 		{
-			if (broker.GetState("archive") == null)
+			if (broker.GetState("module") == null)
 			{
 				throw new Exception("A module must be imported first.");
 			}
@@ -46,7 +46,7 @@ namespace CLI
 				throw new Exception("Incorrect number of arguments");
 			}
 
-			broker.GetState("archive").Export(args[1]);
+			broker.GetState("module").Export(args[1]);
 		}
 	}
 }
