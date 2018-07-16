@@ -33,6 +33,17 @@ namespace AppX
 			return new Field(data, name);
 		}
 
+		public string[] List()
+		{
+			var list = new List<string>();
+			var items = data.Elements("scalarField").Elements("fieldName");
+			foreach (var item in items)
+			{
+				list.Add(item.Value);
+			}
+			return list.ToArray();
+		}
+
 		public void Remove()
 		{
 			designs.Remove(data.Document);

@@ -62,6 +62,59 @@ namespace CLI
 			{
 				Console.WriteLine("Error: " + e.Message);
 				Console.WriteLine("Enter 'help' for assistance.");
+				// Console.Error.WriteLine(e.StackTrace);
+			}
+		}
+
+		// Gets the currently selected working path in the broker
+		public string SelectedPath
+		{
+			get
+			{
+				Module module = GetState("module");
+				Design design = GetState("design");
+				Field field = GetState("field");
+
+				var path = "";
+				if (module != null)
+				{
+					path += '/' + module.Name;
+					if (design != null)
+					{
+						path += '/' + design.Type;
+						if (field != null)
+						{
+							path += '/' + field.Name;
+						}
+					}
+				}
+				return path;
+			}
+		}
+
+		// Gets the currently selected item at the working path
+		public dynamic SelectedItem
+		{
+			get
+			{
+				Module module = GetState("module");
+				Design design = GetState("design");
+				Field field = GetState("field");
+
+				if (module == null)
+				{
+					throw new Exception("You must import a module first.");
+				}
+
+				if (field != null)
+				{
+					return field;
+				}
+				else if (design != null)
+				{
+					return design;
+				}
+				return module;
 			}
 		}
 	}

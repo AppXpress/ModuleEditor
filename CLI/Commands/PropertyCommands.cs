@@ -3,52 +3,18 @@ using System;
 
 namespace CLI
 {
-	// Removes the selected item from the archive
-	class RemoveCommand : BrokerCommand
-	{
-		public RemoveCommand(CommandBroker broker) : base(broker) { }
-
-		public override string Name() => "remove";
-		public override string Args() => "";
-		public override string Info() => "removes the current selection";
-
-		public override void Run(string[] args)
-		{
-			var selection = broker.GetState("selection");
-			if (selection != null)
-			{
-				var type = selection.GetType();
-				if (type == typeof(Design) || type == typeof(Field))
-				{
-					selection.Remove();
-					broker.SetState("selection", null);
-
-					if (type == typeof(Design))
-					{
-						Console.WriteLine("Removed design '" + selection.Type + "'");
-					}
-					else
-					{
-						Console.WriteLine("Removed field '" + selection.Name + "'");
-					}
-					return;
-				}
-			}
-			throw new Exception("You must select a design or field first.");
-		}
-	}
-
+	// Lists properties of the working path
 	class ListCommand : BrokerCommand
 	{
 		public ListCommand(CommandBroker broker) : base(broker) { }
 
-		public override string Name() => "list";
+		public override string Name() => "listp";
 		public override string Args() => "";
-		public override string Info() => "lists all values in the selected item";
+		public override string Info() => "lists all properties of the working path";
 
 		public override void Run(string[] args)
 		{
-			var selection = broker.GetState("selection");
+			var selection = broker.SelectedItem;
 			if (selection == null)
 			{
 				throw new Exception("Nothing is selected.");
@@ -63,17 +29,18 @@ namespace CLI
 		}
 	}
 
+	// Gets a property value of the working path
 	class GetCommand : BrokerCommand
 	{
 		public GetCommand(CommandBroker broker) : base(broker) { }
 
-		public override string Name() => "get";
+		public override string Name() => "getp";
 		public override string Args() => "<key>";
-		public override string Info() => "gets a value from the selected item";
+		public override string Info() => "gets a property of the working path";
 
 		public override void Run(string[] args)
 		{
-			var selection = broker.GetState("selection");
+			var selection = broker.SelectedItem;
 			if (selection == null)
 			{
 				throw new Exception("Nothing is selected.");
@@ -86,7 +53,6 @@ namespace CLI
 
 			var type = selection.GetType();
 			var property = type.GetProperty(args[1]);
-
 			if (property == null)
 			{
 				throw new Exception("Property not found.");
@@ -94,31 +60,31 @@ namespace CLI
 
 			if (!property.CanRead)
 			{
-				throw new Exception("Cannot get this property.");
+				throw new Exception("Cannot read from this property.");
 			}
 
 			var value = property.GetValue(selection);
-
 			if (value == null)
 			{
-				throw new Exception("Property not found in object.");
+				throw new Exception("Property not found.");
 			}
 
 			Console.WriteLine(value.ToString());
 		}
 	}
 
+	// Sets a property value of the working path
 	class SetCommand : BrokerCommand
 	{
 		public SetCommand(CommandBroker broker) : base(broker) { }
 
-		public override string Name() => "set";
+		public override string Name() => "setp";
 		public override string Args() => "<key> <value>";
-		public override string Info() => "sets a value from the selected item";
+		public override string Info() => "sets a property of the working path";
 
 		public override void Run(string[] args)
 		{
-			var selection = broker.GetState("selection");
+			var selection = broker.SelectedItem;
 			if (selection == null)
 			{
 				throw new Exception("Nothing is selected.");
@@ -139,7 +105,7 @@ namespace CLI
 
 			if (!property.CanWrite)
 			{
-				throw new Exception("Cannot set this property.");
+				throw new Exception("Cannot write to this property.");
 			}
 
 			property.SetValue(selection, args[2]);

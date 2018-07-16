@@ -43,6 +43,16 @@ namespace AppX
 			return new Design(all_designs, type);
 		}
 
+		public string[] List()
+		{
+			var list = new List<string>();
+			foreach (var design in all_designs)
+			{
+				list.Add(AppX.Design.GetType(design));
+			}
+			return list.ToArray();
+		}
+
 		public string Name
 		{
 			get { return data.Grab("PlatformModule400").Grab("name").Value; }

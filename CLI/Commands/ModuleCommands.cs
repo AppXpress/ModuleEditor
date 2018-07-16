@@ -17,6 +17,8 @@ namespace CLI
 			if (args.Length == 2)
 			{
 				broker.SetState("module", Module.Import(args[1]));
+				broker.SetState("design", null);
+				broker.SetState("field", null);
 			}
 			else
 			{
