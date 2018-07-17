@@ -12,7 +12,7 @@ Use the "Build apps - SDK" column if you want to develop; otherwise use the "Run
 3. Start the application by running `dotnet ModuleEditor.dll`
 4. Import a module by entering `import [path-to-zip-file]`
 5. Select a working item path
-   - In module root (command line starts with `/[module-name-here]>`)
+   - In module root (line starts with `/[module-name-here]>`)
      - Use `ls` to list design roots
      - Use `cd [design-type]` to select a design root
      - Use `cd [design-type]/[field-name]` to select a field root
@@ -24,10 +24,13 @@ Use the "Build apps - SDK" column if you want to develop; otherwise use the "Run
      - Use `cd ..` to go back to the design root
      - Use `cd ../..` to go back to the module root
 6. Edit module, design, or field properties
+   - Select target module/design/field as command path first
    - Use `listp` to list the properties on the working item
    - Use `getp [key]` to get the current value of a property
    - Use `setp [key] [value]` to set the value of a property
-7. Export your new module using `export [path-to-store-zip]`
+7. Remove unwanted designs or fields
+   - With the design/field selected, use `rm` to remove it
+8. Export your new module using `export [path-to-store-zip]`
 
 ## How to build
 
