@@ -3,9 +3,15 @@ Application for editing AppXpress module exports from the GT-Nexus platform
 
 ## How to use
 
-1. Download and run the program
-2. Import a module by entering `import [path-to-zip-file]`
-3. Select a working item path
+This application requires the .NET Core runtime.
+Download and install it from [here](https://www.microsoft.com/net/download/dotnet-core/2.1) before continuing.
+Use the "Build apps - SDK" column if you want to develop; otherwise use the "Run apps - Runtime" column to use this program.
+
+1. Download and extract the release ZIP file for your system
+2. Open a terminal in the extracted folder
+3. Start the application by running `dotnet ModuleEditor.dll`
+4. Import a module by entering `import [path-to-zip-file]`
+5. Select a working item path
    - In module root (command line starts with `/[module-name-here]>`)
      - Use `ls` to list design roots
      - Use `cd [design-type]` to select a design root
@@ -17,11 +23,11 @@ Application for editing AppXpress module exports from the GT-Nexus platform
    - In field root (line starts with `/[module-name-here]/[design-type-here]/[field-name-here]>`)
      - Use `cd ..` to go back to the design root
      - Use `cd ../..` to go back to the module root
-4. Edit module, design, or field properties
+6. Edit module, design, or field properties
    - Use `listp` to list the properties on the working item
    - Use `getp [key]` to get the current value of a property
    - Use `setp [key] [value]` to set the value of a property
-5. Export your new module using `export [path-to-store-zip]`
+7. Export your new module using `export [path-to-store-zip]`
 
 ## How to build
 
