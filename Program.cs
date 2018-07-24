@@ -18,6 +18,9 @@ namespace ModuleEditor
 			broker.AddCommand(new ImportCommand(broker));
 			broker.AddCommand(new ExportCommand(broker));
 
+			broker.AddCommand(new MountCommand(broker));
+			broker.AddCommand(new PersistCommand(broker));
+
 			broker.AddCommand(new ListCommand(broker));
 			broker.AddCommand(new GetCommand(broker));
 			broker.AddCommand(new SetCommand(broker));

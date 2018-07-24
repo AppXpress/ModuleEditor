@@ -51,4 +51,57 @@ namespace CLI
 			broker.GetState("module").Export(args[1]);
 		}
 	}
+
+	class MountCommand : BrokerCommand
+	{
+		public MountCommand(CommandBroker broker) : base(broker) { }
+
+		public override string Name() => "mount";
+		public override string Args() => "<path>";
+		public override string Info() => "mounts a bundle where path points to the extracted ZIP directory";
+
+		public override void Run(string[] args)
+		{
+			if (args.Length != 2)
+			{
+				throw new Exception("Incorrect number of arguments.");
+			}
+
+			try
+			{
+				var module = Module.Mount(args[1]);
+				broker.SetState("module", module);
+				broker.SetState("design", null);
+				broker.SetState("field", null);
+			}
+			catch
+			{
+				throw new Exception("Mounting failed. Please check that your path points to the root of a bundle directory.");
+			}
+		}
+	}
+
+	class PersistCommand : BrokerCommand
+	{
+		public PersistCommand(CommandBroker broker) : base(broker) { }
+
+		public override string Name() => "persist";
+		public override string Args() => "";
+		public override string Info() => "saves working changes to mounted directory";
+
+		public override void Run(string[] args)
+		{
+			if (broker.GetState("module") == null)
+			{
+				throw new Exception("A module must be mounted first.");
+			}
+
+			if (broker.GetState("module").GetTemp())
+			{
+				throw new Exception("Cannot persist imported modules. Please use mount with persist.");
+			}
+
+			broker.GetState("module").StoreData();
+		}
+	}
 }

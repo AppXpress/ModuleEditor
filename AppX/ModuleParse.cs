@@ -57,5 +57,13 @@ namespace AppX
 			if (force) { File.Delete(path); }
 			ZipFile.CreateFromDirectory(folder, path);
 		}
+
+		// Imports a module from an expanded bundle directory
+		public static Module Mount(string path)
+		{
+			var module = new Module(path, false);
+			module.LoadData();
+			return module;
+		}
 	}
 }

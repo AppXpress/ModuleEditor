@@ -37,6 +37,12 @@ namespace AppX
 			}
 		}
 
+		// Gets if the module is a temporary module
+		public bool GetTemp()
+		{
+			return temporary;
+		}
+
 		// Gets a design from the archive data
 		public Design Design(string type)
 		{

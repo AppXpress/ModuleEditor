@@ -65,11 +65,5 @@ namespace AppX
 			get { return data.Grab("summaryField").Value == "true"; }
 			set { data.Grab("summaryField").Value = value.ToString(); }
 		}
-
-		public int MaxLength
-		{
-			get { return int.Parse(data.Grab("maxLength").Value); }
-			set { data.Grab("maxLength").Value = value.ToString(); }
-		}
 	}
 }

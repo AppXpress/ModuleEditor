@@ -108,7 +108,19 @@ namespace CLI
 				throw new Exception("Cannot write to this property.");
 			}
 
-			property.SetValue(selection, args[2]);
+			if (property.PropertyType == typeof(bool))
+			{
+				var value = Boolean.Parse(args[2]);
+				property.SetValue(selection, value);
+			}
+			else if (property.Prop == typeof(string))
+			{
+				property.SetValue(selection, args[2]);
+			}
+			else
+			{
+				throw new Exception("Property does not support setting.");
+			}
 		}
 	}
 }
